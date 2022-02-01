@@ -54,8 +54,8 @@ authenticateToken = (req, res, next) => {
 }
 
 app.get('/', (req,res) => {
-    console.log(success);
-    res.json({"msg":"succescc"});
+    console.log("success");
+    res.json({"msg":"success"});
 })
 
 app.post('/login',(req ,res) =>{
