@@ -24,9 +24,9 @@ const refreshTokensdb = knex({
   }
 });
 
-refreshTokensdb.select('*').from('jwttokens')
-	.then(data => {
-		console.log(data)})
+// refreshTokensdb.select('*').from('jwttokens')
+// 	.then(data => {
+// 		console.log(data)})
 
 //let refreshTokensdb = [];
 
@@ -135,6 +135,6 @@ app.delete('/deldata', (req, res) => {
         .catch(console.log)
 })
 
-app.listen(4000, () => {
-	console.log(`app is running on port 4000`);
+app.listen(process.env.PORT || 4000, () => {
+	console.log(`app is running on port ${process.env.PORT}`);
 })
