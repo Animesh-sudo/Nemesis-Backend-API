@@ -14,15 +14,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const refreshTokensdb = knex({
-  client: 'pg',
-  connection: {
-    host : '127.0.0.1',
-    port : 5432,
-    user : 'postgres',
-    password : 'webtest',
-    database : 'nemisis'
-  }
-});
+    client: 'pg',
+    connection: {
+      connectionString: process.env.DATABASE_URL,
+      ssl: {
+      rejectUnauthorized: false
+      }
+    }
+  })
 
 // refreshTokensdb.select('*').from('jwttokens')
 // 	.then(data => {
