@@ -35,9 +35,27 @@ db = [
         password: 'admin123'
     }
 ]
-app.get('/', authenticateToken, (req,res) => {
-    console.log(db.email);
-    res.json(db.filter(user => user.email === req.user.email));
+
+//Middleware
+
+authenticateToken = (req, res, next) => {
+    const token = req.headers['x-access-token'];
+    //const token = authHeader && authHeader.split(' ')[1];
+    if (token == null) {return res.status(401).json('no token found');}
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+        if(err) {
+            return res.status(403).json({auth: false, message: "invalid token"});
+        }
+        req.user = user;
+        console.log(req.user);
+        next();
+    })
+}
+
+app.get('/', (req,res) => {
+    console.log(success);
+    res.json({"msg":"succescc"});
 })
 
 app.post('/login',(req ,res) =>{
@@ -58,7 +76,8 @@ app.post('/login',(req ,res) =>{
 })
 
 app.get("/isUserAuth", authenticateToken, (req, res) => {
-    res.json("You are authenticated");
+    console.log('processing request');
+    res.json({"auth": true, "msg":"You are authenticated"});
 })
 
 app.post('/token', (req, res) => {
@@ -72,22 +91,6 @@ app.post('/token', (req, res) => {
     })
 })
 
-//Middleware
-
-function authenticateToken(req, res, next){
-    const token = req.headers['x-access-token'];
-    //const token = authHeader && authHeader.split(' ')[1];
-    if (token == null) {return res.status(401).json('no token found');}
-
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-        if(err) {
-            return res.status(403).json({auth: false, message: "invalid token"});
-        }
-        req.user = user;
-        console.log(req.user);
-        next();
-    })
-}
 
 function generateTokonForAccess(user){
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '5m'});
